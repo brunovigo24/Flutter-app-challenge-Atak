@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:app_teste_atak_2024/pesquisa/resultado_page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -107,30 +108,38 @@ class _PesquisaFormState extends State<PesquisaForm> {
   }
 
   Future<void> _fetchResults() async {
-    final url = Uri.parse('http://suaapi.com/api/links/extract?query=$_query');
+    final url = Uri.parse(
+        'http://localhost:8080/api/links/extract-links?searchTerm=$_query');
 
     try {
-      final response = await http.get(url);
+      final response = await http.get(
+        url,
+        headers: {
+          'Authorization': 'Basic ${base64Encode(utf8.encode('admin:mestre'))}',
+        },
+      );
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-
-        setState(() {
-          _results = data['links'].cast<
-              String>(); // Supondo que a resposta da API seja um JSON com uma chave 'links' que contém uma lista de strings
-        });
+        if (data is Map && data.containsKey('links')) {
+          setState(() {
+            _results = List<String>.from(data['links']);
+          });
+        } else {
+          throw Exception('Dados de resposta inválidos');
+        }
       } else {
-        throw Exception('Falha ao buscar resultados');
+        throw Exception('Falha ao buscar resultados: ${response.statusCode}');
       }
     } catch (e) {
       print('Erro ao buscar resultados: $e');
-      // Trate o erro conforme necessário
     }
   }
 
   void _openResultInNewWindow(int index) {
-    // Implemente aqui a lógica para abrir o resultado em uma nova janela
-    // Por exemplo:
-    // Navigator.push(context, MaterialPageRoute(builder: (context) => ResultadoPage(result: _results[index])));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ResultadoPage(result: _results[index])));
   }
 }

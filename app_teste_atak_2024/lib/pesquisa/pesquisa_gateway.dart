@@ -4,7 +4,8 @@ import 'package:app_teste_atak_2024/pesquisa/pesquisa_model.dart';
 import 'package:http/http.dart' as http;
 
 class pesquisa_gateway {
-  static const String URL_API = "URL_DA_SUA_API_AQUI";
+  static const String URL_API =
+      "http://localhost:8080/api/links/extract-links?searchTerm=";
 
   static Future<List<ModeloPesquisa>> pesquisar(String query) async {
     final response = await http.get(Uri.parse('$URL_API/search?q=$query'));
