@@ -7,7 +7,6 @@ class pesquisa_controller extends ChangeNotifier {
     try {
       return await pesquisa_gateway.pesquisar(query);
     } catch (e) {
-      // Lidar com o erro
       rethrow;
     }
   }

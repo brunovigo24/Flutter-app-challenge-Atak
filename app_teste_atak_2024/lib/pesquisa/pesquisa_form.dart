@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:app_teste_atak_2024/pesquisa/link.dart';
+import 'package:app_teste_atak_2024/pesquisa/pesquisa_list.dart';
 import 'package:app_teste_atak_2024/pesquisa/resultado_page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -14,7 +16,7 @@ class _PesquisaFormState extends State<PesquisaForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String _query = '';
   late TextEditingController _queryController;
-  List<String> _results = [];
+  List<Link> _resultados = [];
 
   @override
   void initState() {
@@ -79,18 +81,32 @@ class _PesquisaFormState extends State<PesquisaForm> {
                           ),
                         ),
                         const SizedBox(height: 10),
-                        ..._results.asMap().entries.map((entry) {
+                        ..._resultados.asMap().entries.map((entry) {
                           final index = entry.key;
                           final result = entry.value;
                           return GestureDetector(
                             onTap: () {
-                              _openResultInNewWindow(index);
+                              _openResultInNewWindow(result.url);
                             },
-                            child: Text(
-                              result,
-                              style: TextStyle(
-                                color: Colors.blue,
-                                decoration: TextDecoration.underline,
+                            child: RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: Utf8Codec()
+                                        .decode(result.title.codeUnits),
+                                    style: TextStyle(
+                                      color: Colors.blue,
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text:
+                                        ' [${Utf8Codec().decode(result.url.codeUnits)}]',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           );
@@ -121,9 +137,9 @@ class _PesquisaFormState extends State<PesquisaForm> {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        if (data is Map && data.containsKey('links')) {
+        if (data is List) {
           setState(() {
-            _results = List<String>.from(data['links']);
+            _resultados = data.map((item) => Link.fromJson(item)).toList();
           });
         } else {
           throw Exception('Dados de resposta inválidos');
@@ -136,10 +152,5 @@ class _PesquisaFormState extends State<PesquisaForm> {
     }
   }
 
-  void _openResultInNewWindow(int index) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => ResultadoPage(result: _results[index])));
-  }
+  void _openResultInNewWindow(String url) {}
 }
