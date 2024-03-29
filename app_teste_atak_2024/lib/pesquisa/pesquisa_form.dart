@@ -3,6 +3,7 @@ import 'package:app_teste_atak_2024/pesquisa/link.dart';
 import 'package:app_teste_atak_2024/pesquisa/pesquisa_list.dart';
 import 'package:app_teste_atak_2024/pesquisa/resultado_page.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 
 class PesquisaForm extends StatefulWidget {
@@ -152,5 +153,12 @@ class _PesquisaFormState extends State<PesquisaForm> {
     }
   }
 
-  void _openResultInNewWindow(String url) {}
+  void _openResultInNewWindow(String url) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      throw 'Não foi possível abrir o link: $url';
+    }
+  }
 }
