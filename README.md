@@ -1,13 +1,5 @@
 # APP Atak challenge
 
-1. Desenvolver, em qualquer linguagem, uma API que faz uma pesquisa no google e devolve o resultado em json e/ou XML.
-Não utilizar as API do Google, como Search API.
-
-Deve se extrair do resultado do google:
-    Titulo
-    Link
-   
-
 2. Um cliente para consumir a API utilizando Flutter com gerenciamento de estado, arquitetura limpa e testes unitários:
 
 Ex:
@@ -34,6 +26,3 @@ MARINGA.COM - O portal da cidade de Maringá - Paraná
 
 Prefeitura do Município de Maringá
 [www.maringa.pr.gov.br/]
-
-
-Devolver um zip ou link do repositório para acesso ao fonte e com instruções para podermos rodar seu código.
